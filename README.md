@@ -31,7 +31,6 @@ Activate the environment, install the requirements and run the build command
 source env/bin/activate
 pip install requirements.txt
 python -m build
-deactivate
 ```
 Deactivate the environment
 
