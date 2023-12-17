@@ -1,0 +1,24 @@
+/*
+@import url(//db.onlinewebfonts.com/c/2bf40ab72ea4897a3fd9b6e48b233a19?family=Garamond);
+*/
+
+body {
+  font-family: "Garamond";
+  font-size:10pt;
+  line-height:1.6;
+}
+
+.indent {text-indent:40px;}
+
+@media print {
+  a::after {
+    content: " (" attr(href) ") ";
+  }
+  pre {
+    white-space: pre-wrap;
+  }
+  @page {
+    margin: 0.5in;
+    size: Legal;
+  }
+}
