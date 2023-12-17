@@ -5,7 +5,7 @@ A tool for generating and sending letters to the editor.
 ## Installation
 ### 1. Download
 ```bash
-git clone <>
+git clone https://github.com/egxdigital/carrier.git
 ```
 
 ### 2. Add environment variables
