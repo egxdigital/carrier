@@ -19,10 +19,8 @@ def read_requirements_file(fd):
     res = []
     if Path(fd).is_file():
         with open(fd, 'r') as reader:
-            reqs = [lin.strip('\n')
+            res += [lin.strip('\n')
                     for lin in reader.readlines() if '#' not in lin]
-            res += [req for req in reqs if os.getenv(
-                'python', '/home/engineer/source/python/projects') not in req]
     return res
 
 with open('README.md', 'r') as fh:
@@ -50,7 +48,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     setup_requires=[
         'setuptools>=42',
         'wheel',
