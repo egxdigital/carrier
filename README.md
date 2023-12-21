@@ -35,7 +35,7 @@ python3.10 -m virtualenv env
 Install editable build (in development mode)
 
 ```bash
-./instal.sh
+./install.sh
 ```
 
 ## TODO
