@@ -13,37 +13,30 @@ git clone https://github.com/egxdigital/carrier.git
 Create a .env file with the following fields
 
 ```bash
-EMAIL=youremail@emails.com
+EMAIL=example@example.com
 OAUTH2=/path/to/google/api/oauth2/credentials.json
 SOURCE=/path/to/source/markdown/files
 ATTACHMENTS=/path/to/attachment/output
 ```
 
 ### 3. Install
+Ensure that your user is the owner of the project root and all of its contents
+
+```bash
+sudo chown -R /path/to/repository/root
+```
+
 Create a virtual environment for the project
 
 ```bash
 python3.10 -m virtualenv env
 ```
-Activate the environment, install the requirements and run the build command
+
+Install editable build (in development mode)
 
 ```bash
-source env/bin/activate
-pip install requirements.txt
-python -m build
+./instal.sh
 ```
-Deactivate the environment
 
-```bash
-deactivate
-```
-Install
-
-```bash
-python3.10 -m pip install --editable .
-```
-or install an editable build if you want to customize and develop
-
-```bash
-python3.10 -m pip install --editable .
-```
+## TODO
+1. Fix repeated prints of "Letter PDF titled 'letter-title' created for tabloid" on each instance of send
