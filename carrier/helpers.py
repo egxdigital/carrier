@@ -13,7 +13,6 @@ import yagmail
 
 from carrier.config import *
 from carrier.fragments import *
-from carrier.exceptions import *
 
 
 def first_letters(inp: str, ref: str):

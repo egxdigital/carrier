@@ -20,7 +20,6 @@ from datetime import datetime
 from carrier.config import *
 from carrier.helpers import *
 from carrier.fragments import *
-from carrier.exceptions import *
 
 
 class Carrier():
