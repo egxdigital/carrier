@@ -83,7 +83,7 @@ def send_email(message:str, recipient:str, subject:str, attachment: Path):
             attachments=attachment,
         )
     except Exception as e:
-        print(e)
+        print(type(e).__name__, e)
     else:
         print(colors.BOLD + f"Letter sent to {recipient}:" + colors.ENDC, Path(attachment).stem)
         return True
