@@ -37,6 +37,3 @@ Install editable build (in development mode)
 ```bash
 ./install.sh
 ```
-
-## TODO
-1. Fix repeated prints of "Letter PDF titled 'letter-title' created for tabloid" on each instance of send
