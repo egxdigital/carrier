@@ -3,100 +3,72 @@
 This module contains the test case for the Carrier program.
 
 Usage
-    python -m unittest tests.test_carrier
+    python -m pytest tests.test_carrier
 """
-import unittest
+import pytest
+import argparse
+from typing import List
+from decimal import Decimal
+
+from carrier.config import *
 from carrier.helpers import *
-from carrier.carrier import *
+from carrier.carrier import Carrier
+from carrier.arg_parser import create_parser
+from tests.utils.helpers import *
 
+@pytest.fixture
+def carrier_parser():
+    return create_parser()
 
-class CarrierTest(unittest.TestCase):
-    def setUp(self):
-        parser = argparse.ArgumentParser(
-            prog='carrier',
-            fromfile_prefix_chars='@',
-            usage='carrier [options] <command> <arg1>',
-            description='<desc>',
-            epilog='Build it!')
+def run_command(parser: argparse.ArgumentParser, command: List[str]) -> Carrier:
+    args = parser.parse_args(command)
+    options = vars(args)
+    carrier = Carrier(parser, options)
+    return carrier
 
-        # Add arguments here
-        parser.add_argument('-d', '--destination',
-                            action='store',
-                            type=str,
-                            required=False,
-                            help='')
-        parser.add_argument('-m', '--message',
-                            action='store_true',
-                            required=False,
-                            help='modifies something')
-        parser.add_argument('-p', '--pdf',
-                            action='store_true',
-                            required=False,
-                            help='modifies something')
-        parser.add_argument('-k', '--kaieteur',
-                            action='store_true',
-                            required=False,
-                            help='modifies something')
-        parser.add_argument('-s', '--stabroek',
-                            action='store_true',
-                            required=False,
-                            help='modifies something')
-        parser.add_argument('-c', '--chronicle',
-                            action='store_true',
-                            required=False,
-                            help='modifies something')
-        parser.add_argument('-g', '--guyanatimes',
-                        action='store_true',
-                        required=False,
-                        help='guyana times letter to the editor')
-        parser.add_argument('-r', '--subject',
-                            action='store',
-                            type=str,
-                            required=False,
-                            help='subject line for email sendout')    
-        parser.add_argument('-t', '--tabloid',
-                            action='store',
-                            nargs='+',
-                            type=str,
-                            required=False,
-                            help='modifies something')
-        parser.add_argument('commands',
-                            nargs='+',
-                            help="use a command eg. init or start")
+def test_carrier_send_invoice_for_validated_payload_with_partial_input(carrier_parser):
+    command = [
+       "send",
+       "--invoice", 
+        "t=GPL", 
+        "n=GS002", 
+        "Monthly Progress Report=225000"
+    ]
 
-        self.parser = parser
-        self.k_dummy = Path(PurePath(ATTACHMENTS, 'kaieteur-dummy.pdf'))
-        self.c_dummy = Path(PurePath(ATTACHMENTS, 'chronicle-dummy.pdf'))
+    payload = [
+        {
+            'type': 'invoice',
+            'from': 'me', 
+            'to': 'GPL', 
+            'number': 'GS002',
+            'line-items': [{'Monthly Progress Report': Decimal('225000.00')}]
+        }
+    ]
 
-    def tearDown(self):
-        for dummy in [self.k_dummy, self.c_dummy]:
-            if Path(dummy).is_file():
-                Path(dummy).unlink()
-    
-    def test_generate(self):
-        dummy_md = Path(PurePath(TEST_DATA, 'dummy.md'))
-        command = argparse.Namespace(
-            destination=None,
-            message=False,
-            pdf=True,
-            kaieteur=True,
-            stabroek=False,
-            chronicle=True,
-            guyanatimes=False,
-            tabloid=None,
-            commands=['generate', dummy_md]
-        )
-        args = command
-        options = vars(args)
-        carrier = Carrier(self.parser, options)
-        
-        dummy_pdf = [
-            self.k_dummy,
-            self.c_dummy
-        ]
-        
-        for pdf in dummy_pdf:
-            self.assertTrue(Path(pdf).is_file())
+    carrier = run_command(carrier_parser, command)
+    result = carrier.payload
+    assert result == payload
 
-if __name__ == '__main__':
-    unittest.main()
+def test_carrier_send_invoice_for_validated_payload_with_short_form_attr_nanes(carrier_parser):
+    command = [
+       "send",
+       "--invoice", 
+        "fr=me", 
+        "t=GPL", 
+        "n=GS002", 
+        "Monthly Progress Report=225000"
+    ]
+
+    payload = [
+        {
+            'type': 'invoice',
+            'from': 'me', 
+            'to': 'GPL', 
+            'number': 'GS002',
+            'line-items': [{'Monthly Progress Report': Decimal('225000.00')}]
+        }
+    ]
+
+    carrier = run_command(carrier_parser, command)
+    result = carrier.payload
+    assert result == payload

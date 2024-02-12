@@ -5,6 +5,7 @@ This module contains the helper function definitions for the Carrier program.
 import textwrap
 from datetime import datetime
 from pathlib import Path, PurePath
+from decimal import Decimal, ROUND_HALF_UP
 
 from weasyprint import HTML, CSS
 from weasyprint.document import Document
@@ -14,6 +15,20 @@ import yagmail
 from carrier.config import *
 from carrier.fragments import *
 
+
+def decimal_quantize(amt: str) -> Decimal:
+    """Takes a currency amount as a string and returns a Decimal value stored to two decimal places
+
+    Args:
+        amt (str): dollar amount
+
+    Returns:
+        Decimal: value to two decimal places
+    """
+    return Decimal(amt).quantize(
+        Decimal('0.01'),
+        rounding=ROUND_HALF_UP
+    )
 
 def first_letters(inp: str, ref: str):
     return inp == ref[0:len(inp)]

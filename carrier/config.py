@@ -5,6 +5,14 @@ from pathlib import Path, PurePath
 load_dotenv()
 
 DESCRIPTION = 'A tool for generating and sending letters to the editor'
+KEY_VALUE_ARGUMENT_HELP = (
+    "Set a number of key-value pairs "
+    "(do not put spaces before or after the = sign). "
+    "If a value contains spaces, you should define "
+    "it with double quotes: "
+    'foo="this is a sentence". Note that '
+    "values are always treated as strings."
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 STATIC = Path(PurePath(ROOT, 'static'))
@@ -16,6 +24,13 @@ SOURCE = os.getenv('SOURCE')
 ATTACHMENTS = os.getenv('ATTACHMENTS')
 OAUTH2 = Path(os.getenv('OAUTH2'))
 EMAIL = os.getenv('EMAIL')
+SENDER = os.getenv('SENDER')
+PHONE= os.getenv('PHONE')
+ADDRESS = os.getenv('ADDRESS')
+GUYSOL_PC = os.getenv('GUYSOL_PC')
+GUYSOL_PC_TITLE = os.getenv('GUYSOL_PC_TITLE')
+GUYSOL_ADDRESS = os.getenv('GUYSOL_ADDRESS')
+GUYSOL_TELEPHONE = os.getenv('GUYSOL_TELEPHONE')
 
 
 class colors():
