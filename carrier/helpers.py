@@ -3,6 +3,7 @@
 This module contains the helper function definitions for the Carrier program.
 """
 import textwrap
+import traceback
 from datetime import datetime
 from pathlib import Path, PurePath
 
@@ -83,6 +84,7 @@ def send_email(message:str, recipient:str, subject:str, attachment: Path):
         )
     except Exception as e:
         print(type(e).__name__, e)
+        print(traceback.format_exc())
     else:
         print(colors.BOLD + f"Letter sent to {recipient}:" + colors.ENDC, Path(attachment).stem)
         return True

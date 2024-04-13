@@ -12,7 +12,7 @@ TESTS = Path(PurePath(ROOT, 'tests'))
 TEST_DATA = Path(PurePath(TESTS, 'data'))
 STYLES = Path(PurePath(STATIC, 'basic.css'))
 
-SOURCE = os.getenv('SOURCE')
+SOURCE = os.getenv('LETTERS')
 ATTACHMENTS = os.getenv('ATTACHMENTS')
 OAUTH2 = Path(os.getenv('OAUTH2'))
 EMAIL = os.getenv('EMAIL')

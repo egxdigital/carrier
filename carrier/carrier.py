@@ -125,6 +125,7 @@ class Carrier():
             if not Path(arg).is_file():
                 source_markdown = Path(PurePath(SOURCE, f"{arg}.md"))
                 if Path(source_markdown).is_file():
+                    print(source_markdown)
                     self.attachments += [source_markdown]
                 else:
                     self.parser.error(ERROR.bad_source_file_name + ": " + arg)
@@ -160,46 +161,46 @@ class Carrier():
             if self.options[name]:
                 self.tabloids[name] = True
     
+    def _generate_pdf_for(self, tabloid):
+        print("Generating PDF for:", tabloid)
+        for _ in self.attachments:
+            pdf_file = convert_markdown_to_pdf_letter(
+                styles=STYLES,
+                md=_,
+                tabloid=tabloid,
+                loc=ATTACHMENTS
+            )
+            self.payload[tabloid]['pdf'] = pdf_file
+            print(
+                colors.BOLD + 
+                f"Letter PDF titled '{Path(_).stem}' created for {tabloid}" + 
+                colors.ENDC + " @ " + 
+                f"{self.payload[tabloid]['pdf']}"
+            )
+            return pdf_file
+    
     def generate(self):
         self._validate_tabloids()
 
-        for it in self.attachments:
-            for tabloid, yes in self.tabloids.items():
-                if yes:            
-                    pdf_file = convert_markdown_to_pdf_letter(
-                        styles=STYLES,
-                        md=it,
-                        tabloid=tabloid,
-                        loc=ATTACHMENTS)
-                    self.payload[tabloid]['pdf'] = pdf_file
-
-                    print(
-                        colors.BOLD + 
-                        f"Letter PDF titled '{Path(it).stem}' created for {tabloid}" + 
-                        colors.ENDC + " @ " + 
-                        f"{self.payload[tabloid]['pdf']}"
-                    )
+        for tabloid, yes in self.tabloids.items():
+            if yes:            
+                self._generate_pdf_for(tabloid)
+            
     
     def send(self):
         self._validate_tabloids()
-
         for tabloid, yes in self.tabloids.items():
             if yes:
-                # Send the latest version
-                # Generate a new PDF before send
-                # TODO: Check file timestamps
-                self.generate()
-                letter_pdf = self.payload[tabloid]['pdf']
-                if Path(letter_pdf).is_file():
-                    send_email(
-                        message=email_message_to_editor_with_credentials.format(
+               self._generate_pdf_for(tabloid)
+               send_email(
+                    message=email_message_to_editor_with_credentials.format(
                             Month=datetime.now().strftime("%B"),
                             day=datetime.now().strftime("%d")
                         ),
                         recipient=emails[tabloid],
                         subject=f"Letter to the editor: {self.options['subject']}",
-                        attachment=letter_pdf,
-                    )
+                    attachment=self.payload[tabloid]['pdf']
+                )
 
 def main():
     parser = argparse.ArgumentParser(
